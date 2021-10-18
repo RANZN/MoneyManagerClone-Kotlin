@@ -54,6 +54,9 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
     override fun onItemClicked(data: DatabaseModel?, position: Int) {
         val intent = Intent(context, AddDataActivity::class.java)
         intent.putExtra("pos", data?.id)
+//        val bundle = Bundle()
+//        bundle.putSerializable("data",data)
+//        intent.putExtra("data",data)
         startActivity(intent)
     }
 

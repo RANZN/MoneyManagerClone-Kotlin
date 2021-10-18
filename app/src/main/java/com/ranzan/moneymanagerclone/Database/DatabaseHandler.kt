@@ -74,12 +74,12 @@ class DatabaseHandler(private val context: Context?) : SQLiteOpenHelper(context,
         values.put(AMOUNT, amount)
         values.put(NOTE, note)
         values.put(DESC, desc)
-        db.update(TABLE_NAME, values, "id= $id", null)
+        db.update(TABLE_NAME, values, "Id= $id", null)
     }
 
     fun deleteData(id: Int) {
         val db = writableDatabase
-        val affectedRows = db.delete(TABLE_NAME, "id=$id", null)
+        val affectedRows = db.delete(TABLE_NAME, "Id=$id", null)
         if (affectedRows > 0)
             Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show()
         else Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show()
@@ -88,7 +88,8 @@ class DatabaseHandler(private val context: Context?) : SQLiteOpenHelper(context,
     fun getData(id: Int): DatabaseModel {
         var databaseModel: DatabaseModel? = null
         val db = readableDatabase
-        val query = "SELECT * FROM $TABLE_NAME WHERE id=$id"
+        val query = "SELECT * FROM $TABLE_NAME " +
+                "WHERE Id=$id"
         val cursor = db.rawQuery(query, null)
         if (cursor != null && cursor.count > 0) {
             cursor.moveToFirst()
