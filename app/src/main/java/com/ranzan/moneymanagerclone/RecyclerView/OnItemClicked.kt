@@ -1,7 +1,7 @@
 package com.ranzan.moneymanagerclone.RecyclerView
 
-import com.ranzan.moneymanagerclone.Database.DatabaseModel
+import com.ranzan.moneymanagerclone.DB.DataEntity
 
 interface OnItemClicked {
-    fun onItemClicked(data: DatabaseModel?, position: Int)
+    fun onItemClicked(data: DataEntity?, position: Int)
 }

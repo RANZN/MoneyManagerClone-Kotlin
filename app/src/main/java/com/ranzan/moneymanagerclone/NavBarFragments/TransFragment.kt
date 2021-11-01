@@ -4,21 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ranzan.moneymanagerclone.AddDataActivity
-import com.ranzan.moneymanagerclone.Database.DatabaseHandler
-import com.ranzan.moneymanagerclone.Database.DatabaseModel
+import com.ranzan.moneymanagerclone.DB.DataDAO
+import com.ranzan.moneymanagerclone.DB.DataEntity
+import com.ranzan.moneymanagerclone.DB.RoomDataBaseModel
 import com.ranzan.moneymanagerclone.R
 import com.ranzan.moneymanagerclone.RecyclerView.OnItemClicked
 import com.ranzan.moneymanagerclone.RecyclerView.RecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_trans.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
-    private lateinit var dbHandler: DatabaseHandler
-    private var list: MutableList<DatabaseModel> = mutableListOf()
+    private lateinit var roomDB: RoomDataBaseModel
+    private lateinit var dao: DataDAO
+
+    private var list: MutableList<DataEntity> = mutableListOf()
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
-//    private var totalIncome = 0
-//    private var totalExpenses = 0
 
     companion object {
         @JvmStatic
@@ -30,7 +35,8 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        dbHandler = DatabaseHandler(context)
+        roomDB = RoomDataBaseModel.getDataBaseObject(requireContext())
+        dao = roomDB.getDao()
     }
 
     private fun setRecyclerView() {
@@ -43,15 +49,19 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        list = dbHandler.getDataList()
-        list.reverse()
-        setRecyclerView()
-        totalIncome.text="₹ ${dbHandler.getTotalIncome().toString()}"
-        totalExpenses.text="₹ "+dbHandler.getTotalExpenses().toString()
-        totalAmount.text="₹ "+(dbHandler.getTotalIncome()-dbHandler.getTotalExpenses()).toString()
+        dao.getListFromDB().observe(viewLifecycleOwner, Observer {
+            list = it
+            setRecyclerView()
+        })
+        CoroutineScope(Dispatchers.IO).launch {
+            totalIncome.text = "₹ ${dao.getTotalIncome().toString()}"
+            totalExpenses.text = "₹ " + dao.getTotalExpenses().toString()
+            totalAmount.text = "₹ " + (dao.getTotalIncome() - dao.getTotalExpenses())
+        }
+
     }
 
-    override fun onItemClicked(data: DatabaseModel?, position: Int) {
+    override fun onItemClicked(data: DataEntity?, position: Int) {
         val intent = Intent(context, AddDataActivity::class.java)
         intent.putExtra("pos", data?.id)
 //        val bundle = Bundle()

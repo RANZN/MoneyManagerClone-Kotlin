@@ -9,23 +9,30 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.ranzan.moneymanagerclone.Database.DatabaseHandler
+import com.ranzan.moneymanagerclone.DB.DataDAO
+import com.ranzan.moneymanagerclone.DB.DataEntity
+import com.ranzan.moneymanagerclone.DB.RoomDataBaseModel
 import kotlinx.android.synthetic.main.activity_add_data.*
 import kotlinx.android.synthetic.main.activity_add_data.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 class AddDataActivity : AppCompatActivity() {
     private var typeValue = 2
-    private lateinit var dbHandler: DatabaseHandler
+    private lateinit var roomDB: RoomDataBaseModel
+    private lateinit var dao: DataDAO
     private lateinit var getDate: String
     private lateinit var getTime: String
     private var modify = false
     private var iD: Int = 0
-
+    private lateinit var data:DataEntity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_data)
-        dbHandler = DatabaseHandler(this)
+        roomDB = RoomDataBaseModel.getDataBaseObject(this)
+        dao = roomDB.getDao()
         btnRadioColorChange()
         selectedRadioBtn()
         pickDateAndTime()
@@ -41,22 +48,26 @@ class AddDataActivity : AppCompatActivity() {
             iD = intent.getIntExtra("pos", -1)
             modify = true
             btnDelete.visibility = View.VISIBLE
-
-            var data = dbHandler.getData(iD)
-            data.apply {
-                typeValue = type
-                getDate = date
-                getTime = time
+            CoroutineScope(Dispatchers.IO).launch {
+                data = dao.getDataFromDB(iD)
+                setModifiedData(data)
             }
-            date.text = "$getDate    $getTime"
-            account.text = data.account
-            category.setText(data.category)
-            amount.setText(data.amount.toString())
-            note.setText(data.note)
-            description.setText(data.description)
-            btnRadioColorChange()
-
         }
+    }
+
+    private fun setModifiedData(data: DataEntity) {
+        data.apply {
+            typeValue = type
+            getDate = date
+            getTime = time
+        }
+        date.text = "$getDate    $getTime"
+        account.text = data.account
+        category.setText(data.category)
+        amount.setText(data.amount.toString())
+        note.setText(data.note)
+        description.setText(data.description)
+        btnRadioColorChange()
     }
 
     //for modifying data and update to database
@@ -65,8 +76,7 @@ class AddDataActivity : AppCompatActivity() {
             if (account.text.toString().isEmpty()) {
                 Toast.makeText(this, "Please select account", Toast.LENGTH_SHORT).show()
             } else if (amount.length() > 0) {
-                dbHandler.updateData(
-                    iD,
+                val dataEntity = DataEntity(
                     typeValue,
                     getDate,
                     getTime,
@@ -76,6 +86,9 @@ class AddDataActivity : AppCompatActivity() {
                     note.text.toString(),
                     description.text.toString()
                 )
+                CoroutineScope(Dispatchers.IO).launch {
+                    dao.updateData(dataEntity)
+                }
                 Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@AddDataActivity, MainActivity::class.java)
                 startActivity(intent)
@@ -85,24 +98,20 @@ class AddDataActivity : AppCompatActivity() {
             if (account.text.toString().isEmpty()) {
                 Toast.makeText(this, "Please select account", Toast.LENGTH_SHORT).show()
             } else if (amount.length() > 0) {
-                dbHandler.updateData(
-                    iD,
-                    typeValue,
-                    getDate,
-                    getTime,
-                    account.text.toString(),
-                    category.text.toString(),
-                    amount.text.toString().toInt(),
-                    note.text.toString(),
-                    description.text.toString()
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    dao.updateData(
+                        data
+                    )
+                }
                 Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@AddDataActivity, AddDataActivity::class.java)
                 startActivity(intent)
             } else amount.error = "Enter Amount"
         }
         btnDelete.setOnClickListener {
-            dbHandler.deleteData(iD)
+            CoroutineScope(Dispatchers.IO).launch {
+                dao.deleteData(data)
+            }
             Toast.makeText(this, "Deleted Successfully", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@AddDataActivity, MainActivity::class.java)
             startActivity(intent)
@@ -115,7 +124,7 @@ class AddDataActivity : AppCompatActivity() {
             if (account.text.toString().isEmpty()) {
                 Toast.makeText(this, "Please select account", Toast.LENGTH_SHORT).show()
             } else if (amount.length() > 0) {
-                dbHandler.insertData(
+                val dataEntity = DataEntity(
                     typeValue,
                     getDate,
                     getTime,
@@ -125,6 +134,11 @@ class AddDataActivity : AppCompatActivity() {
                     note.text.toString(),
                     description.text.toString()
                 )
+                CoroutineScope(Dispatchers.IO).launch {
+                    dao.addDataToDB(
+                        dataEntity
+                    )
+                }
                 val intent = Intent(this@AddDataActivity, MainActivity::class.java)
                 startActivity(intent)
             } else amount.error = "Enter Amount"
@@ -133,7 +147,7 @@ class AddDataActivity : AppCompatActivity() {
             if (account.text.toString().isEmpty()) {
                 Toast.makeText(this, "Please select account", Toast.LENGTH_SHORT).show()
             } else if (amount.length() > 0) {
-                dbHandler.insertData(
+                val dataEntity = DataEntity(
                     typeValue,
                     getDate,
                     getTime,
@@ -143,6 +157,10 @@ class AddDataActivity : AppCompatActivity() {
                     note.text.toString(),
                     description.text.toString()
                 )
+                CoroutineScope(Dispatchers.IO).launch {
+                    dao.addDataToDB(dataEntity)
+
+                }
                 val intent = Intent(this@AddDataActivity, AddDataActivity::class.java)
                 startActivity(intent)
             } else amount.error = "Enter Amount"
@@ -156,7 +174,6 @@ class AddDataActivity : AppCompatActivity() {
         val dayOfMonth = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
         val hh = Calendar.getInstance()[Calendar.HOUR]
         val min = Calendar.getInstance()[Calendar.MINUTE]
-        val sec = Calendar.getInstance()[Calendar.SECOND]
         getDate =
             String.format("%02d", dayOfMonth) + "/" + String.format("%02d", month + 1) + "/" + year
         getTime = String.format("%02d", hh) + ":" + String.format(

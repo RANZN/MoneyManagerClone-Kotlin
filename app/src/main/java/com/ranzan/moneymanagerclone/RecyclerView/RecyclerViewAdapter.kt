@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.ranzan.moneymanagerclone.Database.DatabaseModel
+import com.ranzan.moneymanagerclone.DB.DataEntity
 import com.ranzan.moneymanagerclone.R
 
 class RecyclerViewAdapter(
-    private var list: MutableList<DatabaseModel>,
+    private var list: MutableList<DataEntity>,
     private val onItemClicked: OnItemClicked
 ) :
     RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder>() {
@@ -36,7 +36,7 @@ class RecyclerViewAdapter(
         private var date_n_time: TextView = view.findViewById(R.id.dateNtime)
         private var constraintLayout: ConstraintLayout = view.findViewById(R.id.constrainLayout)
 
-        fun setData(data: DatabaseModel, onItemClicked: OnItemClicked) {
+        fun setData(data: DataEntity, onItemClicked: OnItemClicked) {
             category.text = data.category
             note.text = data.note
             account.text = data.account
