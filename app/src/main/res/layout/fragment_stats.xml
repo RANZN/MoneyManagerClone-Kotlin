@@ -220,7 +220,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/itemCash"
+                    android:id="@+id/tvCash"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

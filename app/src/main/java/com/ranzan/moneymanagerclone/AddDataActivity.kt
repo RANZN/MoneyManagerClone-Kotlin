@@ -75,14 +75,14 @@ class AddDataActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
             if (account.text.toString().isEmpty()) {
                 Toast.makeText(this, "Please select account", Toast.LENGTH_SHORT).show()
-            } else if (amount.length() > 0) {
+            } else if (amount.text.isNotBlank()) {
                 val dataEntity = DataEntity(
                     typeValue,
                     getDate,
                     getTime,
                     account.text.toString(),
                     category.text.toString(),
-                    amount.text.toString().toInt(),
+                    amount.text.toString().toFloat(),
                     note.text.toString(),
                     description.text.toString()
                 )
@@ -98,9 +98,19 @@ class AddDataActivity : AppCompatActivity() {
             if (account.text.toString().isEmpty()) {
                 Toast.makeText(this, "Please select account", Toast.LENGTH_SHORT).show()
             } else if (amount.length() > 0) {
+                val dataEntity = DataEntity(
+                    typeValue,
+                    getDate,
+                    getTime,
+                    account.text.toString(),
+                    category.text.toString(),
+                    amount.text.toString().toFloat(),
+                    note.text.toString(),
+                    description.text.toString()
+                )
                 CoroutineScope(Dispatchers.IO).launch {
                     dao.updateData(
-                        data
+                        dataEntity
                     )
                 }
                 Toast.makeText(this, "Modified Successfully", Toast.LENGTH_SHORT).show()
@@ -130,7 +140,7 @@ class AddDataActivity : AppCompatActivity() {
                     getTime,
                     account.text.toString(),
                     category.text.toString(),
-                    amount.text.toString().toInt(),
+                    amount.text.toString().toFloat(),
                     note.text.toString(),
                     description.text.toString()
                 )
@@ -153,7 +163,7 @@ class AddDataActivity : AppCompatActivity() {
                     getTime,
                     account.text.toString(),
                     category.text.toString(),
-                    amount.text.toString().toInt(),
+                    amount.text.toString().toFloat(),
                     note.text.toString(),
                     description.text.toString()
                 )

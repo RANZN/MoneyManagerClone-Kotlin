@@ -18,7 +18,7 @@ data class DataEntity(
     @ColumnInfo(name = "Category")
     val category: String,
     @ColumnInfo(name = "Amount")
-    val amount: Int,
+    val amount: Float,
     @ColumnInfo(name = "Note")
     val note: String,
     @ColumnInfo(name = "Description")

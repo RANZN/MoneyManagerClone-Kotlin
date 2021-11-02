@@ -9,6 +9,9 @@ interface DataDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addDataToDB(dataEntity: DataEntity)
 
+    @Update
+    fun updateData(dataEntity: DataEntity)
+
     @Delete
     fun deleteData(dataEntity: DataEntity)
 
@@ -18,12 +21,9 @@ interface DataDAO {
     @Query("select * from `table` where id=:id")
     fun getDataFromDB(id: Int): DataEntity
 
-    @Update
-    fun updateData(dataEntity: DataEntity)
+    @Query("select sum(amount) from `table` where type==1")
+    fun getTotalIncome(): LiveData<Float>
 
-    @Query("select sum(type) from `table` where type==1" )
-    fun getTotalIncome(): Int
-
-    @Query("select sum(type) from `table` where type==2")
-    fun getTotalExpenses(): Int
+    @Query("select sum(amount) from `table` where type==2")
+    fun getTotalExpenses(): LiveData<Float>
 }

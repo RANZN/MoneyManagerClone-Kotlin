@@ -14,9 +14,6 @@ import com.ranzan.moneymanagerclone.R
 import com.ranzan.moneymanagerclone.RecyclerView.OnItemClicked
 import com.ranzan.moneymanagerclone.RecyclerView.RecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_trans.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
     private lateinit var roomDB: RoomDataBaseModel
@@ -52,14 +49,26 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
         dao.getListFromDB().observe(viewLifecycleOwner, Observer {
             list = it
             setRecyclerView()
+            setAmounts()
         })
-        CoroutineScope(Dispatchers.IO).launch {
-            totalIncome.text = "₹ ${dao.getTotalIncome().toString()}"
-            totalExpenses.text = "₹ " + dao.getTotalExpenses().toString()
-            totalAmount.text = "₹ " + (dao.getTotalIncome() - dao.getTotalExpenses())
+    }
+
+    private fun setAmounts() {
+        var tI = 0F
+        var tE = 0F
+        list.forEach {
+            if (it.type == 1) {
+                tI += it.amount
+            } else if (it.type == 2) {
+                tE += it.amount
+            }
         }
+        totalIncome.text = String.format("₹ %.02f", tI)
+        totalExpenses.text = String.format("₹ %.02f", tE)
+        totalAmount.text = String.format("₹ %.2f", tI - tE)
 
     }
+
 
     override fun onItemClicked(data: DataEntity?, position: Int) {
         val intent = Intent(context, AddDataActivity::class.java)

@@ -40,7 +40,7 @@ class RecyclerViewAdapter(
             category.text = data.category
             note.text = data.note
             account.text = data.account
-            amount.text = data.amount.toString()
+            amount.text = "₹ "+data.amount.toString()
             date_n_time.text = data.date + "    " + data.time
             amount.run {
                 when {

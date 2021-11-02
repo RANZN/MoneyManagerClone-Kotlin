@@ -8,7 +8,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
 
     companion object {
-
         @JvmStatic
         fun newInstance() =
             AccountFragment().apply {
