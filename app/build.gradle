@@ -20,6 +20,7 @@ android {
 
     buildTypes {
         release {
+            multiDexEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -49,8 +50,17 @@ dependencies {
     //for password toggle
     implementation 'com.google.android.material:material:1.2.1'
     // Chart and graph library
-    implementation 'com.github.blackfizz:eazegraph:1.2.5l@aar'
+//    implementation 'com.github.PhilJay:MPAndroidChart:v1.7.3'
+//    implementation 'com.android.support:multidex:1.0.3'
+//    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+//    implementation 'com.github.furkanaskin:ClickablePieChart:1.0.6'
+//    implementation("app.futured.donut:donut:$version")
+//    // If you want to use Jetpack Compose version then use only this one dependency
+//    implementation("app.futured.donut:donut-compose:$version")
+
+    implementation 'com.github.blackfizz:eazegraph:1.2.2@aar'
     implementation 'com.nineoldandroids:library:2.4.0'
+
 
 
     implementation 'androidx.room:room-ktx:2.1.0'

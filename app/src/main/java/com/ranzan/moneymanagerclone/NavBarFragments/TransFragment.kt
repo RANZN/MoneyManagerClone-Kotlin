@@ -66,7 +66,6 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
         totalIncome.text = String.format("₹ %.02f", tI)
         totalExpenses.text = String.format("₹ %.02f", tE)
         totalAmount.text = String.format("₹ %.2f", tI - tE)
-
     }
 
 

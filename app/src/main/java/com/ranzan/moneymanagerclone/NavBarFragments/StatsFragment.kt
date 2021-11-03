@@ -10,11 +10,7 @@ import com.ranzan.moneymanagerclone.DB.DataEntity
 import com.ranzan.moneymanagerclone.DB.RoomDataBaseModel
 import com.ranzan.moneymanagerclone.R
 import kotlinx.android.synthetic.main.fragment_stats.*
-import org.eazegraph.lib.charts.PieChart
 import org.eazegraph.lib.models.PieModel
-
-
-
 
 
 class StatsFragment : Fragment(R.layout.fragment_stats) {
@@ -45,57 +41,57 @@ class StatsFragment : Fragment(R.layout.fragment_stats) {
     }
 
     private fun setData() {
-        var totalCash = 0.0
-        var totalCard = 0.0
-        var totalAccount = 0.0
+        var income = 0f
+        var expenses = 0f
+        var transfer = 0f
         list.forEach {
-            when (it.account) {
-                "Cash" -> {
-                    totalCash += it.amount
+            when (it.type) {
+                1 -> {
+                    income += it.amount
                 }
-                "Card" -> {
-                    totalCard += it.amount
+                2 -> {
+                    expenses += it.amount
                 }
-                "Account" -> {
-                    totalAccount += it.amount
+                3 -> {
+                    transfer += it.amount
                 }
             }
         }
-        tvCash.text = String.format("₹ %.2f",totalCash)
-        tvCard.text = String.format("₹ %.2f",totalCard)
-        tvAccount.text = String.format("₹ %.2f",totalAccount)
-        perCard.text = String.format(
-            "%.2f",
-            totalCard / (totalAccount + totalCash + totalCard) * 100
+        tvCash.text = String.format("₹ %.2f",income)
+        tvCard.text = String.format("₹ %.2f",expenses)
+        tvAccount.text = String.format("₹ %.2f",transfer)
+        perExpense.text = String.format(
+            "%.2f %%",
+            expenses / (transfer + income + expenses) * 100
         )
-        perAccount.text = String.format(
-            "%.2f",
-            totalAccount / (totalAccount + totalCash + totalCard) * 100
+        perTransfer.text = String.format(
+            "%.2f %%",
+            transfer / (transfer + income + expenses) * 100
         )
-        perCash.text = String.format(
-            "%.2f",
-            totalCash / (totalAccount + totalCash + totalCard) * 100
+        perIncome.text = String.format(
+            "%.2f %%",
+            income / (transfer + income + expenses) * 100
         )
 
         pieChart.addPieSlice(
             PieModel(
-                "Cash",
-                totalCash.toFloat(),
-                Color.parseColor("#474747")
-            )
-        )
-        pieChart.addPieSlice(
-            PieModel(
-                "Card",
-                totalCard.toFloat(),
+                "Income",
+                income,
                 Color.parseColor("#3F51B5")
             )
         )
         pieChart.addPieSlice(
             PieModel(
-                "Account",
-                totalAccount.toFloat(),
+                "Expenses",
+                expenses,
                 Color.parseColor("#E13A3A")
+            )
+        )
+        pieChart.addPieSlice(
+            PieModel(
+                "Transfer",
+                transfer,
+                Color.parseColor("#474747")
             )
         )
         pieChart.startAnimation()
