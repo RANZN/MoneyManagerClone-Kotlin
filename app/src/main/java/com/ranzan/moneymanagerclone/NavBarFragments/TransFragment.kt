@@ -10,8 +10,10 @@ import com.ranzan.moneymanagerclone.AddDataActivity
 import com.ranzan.moneymanagerclone.DB.DataDAO
 import com.ranzan.moneymanagerclone.DB.DataEntity
 import com.ranzan.moneymanagerclone.DB.RoomDataBaseModel
+import com.ranzan.moneymanagerclone.DB.SectionEntity
 import com.ranzan.moneymanagerclone.R
 import com.ranzan.moneymanagerclone.RecyclerView.OnItemClicked
+import com.ranzan.moneymanagerclone.RecyclerView.ChildRecyclerViewAdapter
 import com.ranzan.moneymanagerclone.RecyclerView.MainRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_trans.*
 
@@ -19,7 +21,8 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
     private lateinit var roomDB: RoomDataBaseModel
     private lateinit var dao: DataDAO
 
-    private var list: MutableList<DataEntity> = mutableListOf()
+    private var list: MutableList<SectionEntity> = mutableListOf()
+    private var list1: MutableList<DataEntity> = mutableListOf()
     private lateinit var mainRecyclerViewAdapter: MainRecyclerViewAdapter
 
     companion object {
@@ -37,7 +40,8 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
     }
 
     private fun setRecyclerView() {
-        mainRecyclerViewAdapter = MainRecyclerViewAdapter(list, this)
+//        childRecyclerViewAdapter = ChildRecyclerViewAdapter(list, this)
+        mainRecyclerViewAdapter = MainRecyclerViewAdapter(list)
         recyclerView.apply {
             adapter = mainRecyclerViewAdapter
             layoutManager = LinearLayoutManager(context)
@@ -47,22 +51,28 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dao.getListFromDB().observe(viewLifecycleOwner, Observer {
-            list = it
+            list1 = it
+            saveToNewDB()
             setRecyclerView()
             setAmounts()
         })
     }
 
+    private fun saveToNewDB() {
+
+        dao.addDataToNewDB()
+    }
+
     private fun setAmounts() {
         var tI = 0F
         var tE = 0F
-        list.forEach {
-            if (it.type == 1) {
-                tI += it.amount
-            } else if (it.type == 2) {
-                tE += it.amount
-            }
-        }
+//        list.forEach {
+//            if (it.type == 1) {
+//                tI += it.amount
+//            } else if (it.type == 2) {
+//                tE += it.amount
+//            }
+//        }
         totalIncome.text = String.format("₹ %.02f", tI)
         totalExpenses.text = String.format("₹ %.02f", tE)
         totalAmount.text = String.format("₹ %.2f", tI - tE)

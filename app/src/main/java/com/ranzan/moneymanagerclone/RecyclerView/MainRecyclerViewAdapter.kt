@@ -1,68 +1,40 @@
 package com.ranzan.moneymanagerclone.RecyclerView
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.ranzan.moneymanagerclone.DB.DataEntity
+import com.ranzan.moneymanagerclone.DB.SectionEntity
 import com.ranzan.moneymanagerclone.R
 
-class MainRecyclerViewAdapter(
-    private var list: MutableList<DataEntity>,
-    private val onItemClicked: OnItemClicked
-) :
-    RecyclerView.Adapter<MainRecyclerViewAdapter.MainRecyclerViewHolder>() {
+class MainRecyclerViewAdapter(private val list: MutableList<SectionEntity>) :
+    RecyclerView.Adapter<MainRecyclerViewAdapter.MainViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRecyclerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
-        return MainRecyclerViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.main_item_layout, parent, false)
+        return MainViewHolder(view)
     }
 
-    override fun onBindViewHolder(holderMain: MainRecyclerViewHolder, position: Int) {
-        holderMain.setData(list[position], onItemClicked)
-    }
+    override fun onBindViewHolder(holder: MainViewHolder, position: Int) =
+        holder.setData(list[position])
+
 
     override fun getItemCount(): Int = list.size
 
+    class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    class MainRecyclerViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        private var account: TextView = view.findViewById(R.id.itemAccount)
-        private var category: TextView = view.findViewById(R.id.itemCategory)
-        private var note: TextView = view.findViewById(R.id.itemNote)
-        private var amount: TextView = view.findViewById(R.id.itemAmount)
-        private var date_n_time: TextView = view.findViewById(R.id.dateNtime)
-        private var constraintLayout: ConstraintLayout = view.findViewById(R.id.constrainLayout)
+        private val date: TextView = view.findViewById<TextView>(R.id.dateNTime)
+        private val childRecyclerView: RecyclerView =
+            view.findViewById<RecyclerView>(R.id.childRecyclerView)
 
-        fun setData(data: DataEntity, onItemClicked: OnItemClicked) {
-            category.text = data.category
-            note.text = data.note
-            account.text = data.account
-            amount.text = "₹ "+data.amount.toString()
-            date_n_time.text = data.date + "    " + data.time
-            amount.run {
-                when {
-                    data.type === 1 -> {
-                        setTextColor(Color.rgb(63, 81, 181))
-                    }
-                    data.type === 2 -> {
-                        setTextColor(Color.rgb(225, 51, 51))
-                    }
-                    else -> {
-                        setTextColor(Color.rgb(71, 71, 71))
-                    }
-                }
-
-            }
-            constraintLayout.setOnClickListener {
-                onItemClicked.onItemClicked(
-                    data,
-                    adapterPosition
-                )
-            }
+        fun setData(data: SectionEntity) {
+            date.text = data.Date
+            val childRecyclerViewAdapter = ChildRecyclerViewAdapter(data.list)
+            childRecyclerView.adapter = childRecyclerViewAdapter
         }
 
     }
+
 }

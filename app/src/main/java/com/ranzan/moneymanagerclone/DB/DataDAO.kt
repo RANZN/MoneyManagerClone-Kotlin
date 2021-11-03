@@ -26,4 +26,9 @@ interface DataDAO {
 
     @Query("select sum(amount) from `table` where type==2")
     fun getTotalExpenses(): LiveData<Float>
+
+    //section
+   @Insert(onConflict = OnConflictStrategy.REPLACE)
+   fun addDataToNewDB(sectionEntity: SectionEntity)
+
 }
