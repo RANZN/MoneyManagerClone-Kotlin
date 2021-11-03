@@ -37,11 +37,11 @@
 
 
             <org.eazegraph.lib.charts.PieChart
-                android:id="@+id/pieChart"
+                android:id="@+id/statusPieChart"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:egLegendTextSize="30sp"
+                app:egLegendTextSize="20sp"
                 app:egUsePieRotation="true"
                 app:egValueTextSize="36sp"
                 android:padding="6dp" />

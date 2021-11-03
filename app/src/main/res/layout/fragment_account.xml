@@ -61,8 +61,9 @@
         <TextView
             android:id="@+id/assetsValue"
             android:layout_width="wrap_content"
+            android:textColor="@color/income"
             android:layout_height="wrap_content"
-            android:text="100"
+            android:text="₹ 0.0"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -86,7 +87,8 @@
             android:id="@+id/liaValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100"
+            android:textColor="@color/expense"
+            android:text="₹ 0.0"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -110,7 +112,7 @@
             android:id="@+id/totalValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100"
+            android:text="₹ 0.0"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -148,7 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:padding="10dp"
-        android:text="100"
+        android:text="₹ 0.0"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -179,7 +181,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:padding="10dp"
-        android:text="100"
+        android:text="₹ 0.0"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -210,23 +212,22 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:padding="10dp"
-        android:text="100"
+        android:text="₹ 0.0"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/itemCard" />
 
-    <TextView
+
+    <org.eazegraph.lib.charts.PieChart
+        android:id="@+id/accountPieChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.75"
-        android:background="@color/black"
-        android:gravity="center"
-        android:text="In Progress"
-        android:textColor="@color/expense"
-        android:textSize="26sp"
-        android:textStyle="bold" />
-
-
-
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        app:egLegendTextSize="20sp"
+        app:egUsePieRotation="true"
+        app:egValueTextSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -73,28 +73,28 @@ class StatsFragment : Fragment(R.layout.fragment_stats) {
             income / (transfer + income + expenses) * 100
         )
 
-        pieChart.addPieSlice(
+        statusPieChart.addPieSlice(
             PieModel(
                 "Income",
                 income,
                 Color.parseColor("#3F51B5")
             )
         )
-        pieChart.addPieSlice(
+        statusPieChart.addPieSlice(
             PieModel(
                 "Expenses",
                 expenses,
                 Color.parseColor("#E13A3A")
             )
         )
-        pieChart.addPieSlice(
+        statusPieChart.addPieSlice(
             PieModel(
                 "Transfer",
                 transfer,
                 Color.parseColor("#474747")
             )
         )
-        pieChart.startAnimation()
+        statusPieChart.startAnimation()
 
     }
 }
