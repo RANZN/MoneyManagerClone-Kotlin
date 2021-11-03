@@ -12,7 +12,7 @@ import com.ranzan.moneymanagerclone.DB.DataEntity
 import com.ranzan.moneymanagerclone.DB.RoomDataBaseModel
 import com.ranzan.moneymanagerclone.R
 import com.ranzan.moneymanagerclone.RecyclerView.OnItemClicked
-import com.ranzan.moneymanagerclone.RecyclerView.RecyclerViewAdapter
+import com.ranzan.moneymanagerclone.RecyclerView.MainRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_trans.*
 
 class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
@@ -20,7 +20,7 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
     private lateinit var dao: DataDAO
 
     private var list: MutableList<DataEntity> = mutableListOf()
-    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private lateinit var mainRecyclerViewAdapter: MainRecyclerViewAdapter
 
     companion object {
         @JvmStatic
@@ -37,9 +37,9 @@ class TransFragment : Fragment(R.layout.fragment_trans), OnItemClicked {
     }
 
     private fun setRecyclerView() {
-        recyclerViewAdapter = RecyclerViewAdapter(list, this)
+        mainRecyclerViewAdapter = MainRecyclerViewAdapter(list, this)
         recyclerView.apply {
-            adapter = recyclerViewAdapter
+            adapter = mainRecyclerViewAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }

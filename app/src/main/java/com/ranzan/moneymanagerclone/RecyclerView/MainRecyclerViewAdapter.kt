@@ -10,25 +10,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ranzan.moneymanagerclone.DB.DataEntity
 import com.ranzan.moneymanagerclone.R
 
-class RecyclerViewAdapter(
+class MainRecyclerViewAdapter(
     private var list: MutableList<DataEntity>,
     private val onItemClicked: OnItemClicked
 ) :
-    RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder>() {
+    RecyclerView.Adapter<MainRecyclerViewAdapter.MainRecyclerViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRecyclerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
-        return RecyclerViewHolder(view)
+        return MainRecyclerViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-        holder.setData(list[position], onItemClicked)
+    override fun onBindViewHolder(holderMain: MainRecyclerViewHolder, position: Int) {
+        holderMain.setData(list[position], onItemClicked)
     }
 
     override fun getItemCount(): Int = list.size
 
 
-    class RecyclerViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    class MainRecyclerViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private var account: TextView = view.findViewById(R.id.itemAccount)
         private var category: TextView = view.findViewById(R.id.itemCategory)
         private var note: TextView = view.findViewById(R.id.itemNote)
